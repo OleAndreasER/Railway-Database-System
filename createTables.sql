@@ -118,7 +118,7 @@ CREATE TABLE Customer(
     customerId INTEGER,
     name TEXT,
     email TEXT,
-    mobileNr INTEGER,
+    mobileNr TEXT,
     PRIMARY KEY(customerId)
 );
 
