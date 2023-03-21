@@ -122,14 +122,6 @@ CREATE TABLE Customer(
     PRIMARY KEY(customerId)
 );
 
-CREATE TABLE CommonCustomerRegistry(
-    operatorId TEXT,
-    customerId INTEGER,
-    PRIMARY KEY (operatorId, customerId),
-    FOREIGN KEY(operatorId) REFERENCES Operator(operatorId) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY(customerId) REFERENCES Customer(customerId) ON UPDATE CASCADE ON DELETE CASCADE
-);
-
 CREATE TABLE CustomerOrder(
     orderNr INTEGER,
     day TEXT NOT NULL,
