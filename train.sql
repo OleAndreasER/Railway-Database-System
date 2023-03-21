@@ -7,11 +7,11 @@ CREATE TABLE RailwayStation(
 CREATE TABLE SubSection(
     subSectionID INTEGER,
     length REAL,
-    trackType ENUM("singel", "double") NOT NULL,
+    trackType TEXT NOT NULL,
     PRIMARY KEY(subSectionID)
 );
 
-CREATE TABLE Between(
+CREATE TABLE BetweenStations(
     subSectionID INTEGER,
     stationName TEXT,
     PRIMARY KEY(subSectionID, stationName),
@@ -21,9 +21,9 @@ CREATE TABLE Between(
 
 CREATE TABLE StationOnTrack(
     trackSectionID INTEGER,
-    index INTEGER,
+    stationIndex INTEGER,
     stationName TEXT,
-    PRIMARY KEY(trackSectionID, index),
+    PRIMARY KEY(trackSectionID, stationIndex),
     FOREIGN KEY(trackSectionID) REFERENCES TrackSection(trackSectionID) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY(stationName) REFERENCES RailwayStation(name) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -39,13 +39,13 @@ CREATE TABLE SubSectionOf(
 CREATE TABLE TrackSection(
     trackSectionID INTEGER,
     name TEXT NOT NULL,
-    drivingEnergy ENUM("electric", "diesel") NOT NULL,
+    drivingEnergy TEXT NOT NULL,
     PRIMARY KEY(trackSectionID)
 );
 
 CREATE TABLE TrainRoute(
     trainRouteID INTEGER,
-    direction ENUM("main", "opposite") NOT NULL,
+    direction TEXT NOT NULL,
     trackSectionID INTEGER,
     arrangementId INTEGER,
     operatorId TEXT,
@@ -69,11 +69,11 @@ CREATE TABLE TimeTableEntry(
     entryId INTEGER,
     time TEXT NOT NULL,
     trackSectionID INTEGER,
-    index INTEGER,
+    stationIndex INTEGER,
     trainRouteID INTEGER,
     PRIMARY KEY(entryId),
     FOREIGN KEY(trackSectionID) REFERENCES TrackSection(trackSectionID) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY(index) REFERENCES StationOnTrack(index) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY(stationIndex) REFERENCES StationOnTrack(stationIndex) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY(trainRouteID) REFERENCES TrainRoute(trainRouteID) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -130,7 +130,7 @@ CREATE TABLE CommonCustomerRegistry(
     FOREIGN KEY(customerId) REFERENCES Customer(customerId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE Order(
+CREATE TABLE CustomerOrder(
     orderNr INTEGER,
     day TEXT NOT NULL,
     time TEXT NOT NULL,
@@ -191,10 +191,10 @@ CREATE TABLE Ticket(
     startIndex INTEGER,
     endIndex INTEGER,
     PRIMARY KEY(ticketId),
-    FOREIGN KEY(orderNr) REFERENCES Order(orderNr),
+    FOREIGN KEY(orderNr) REFERENCES CustomerOrder(orderNr),
     FOREIGN KEY(trackSectionID) REFERENCES TrackSection(trackSectionID) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY(startIndex) REFERENCES TimeTableEntry(index) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY(endIndex) REFERENCES TimeTableEntry(index) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY(startIndex) REFERENCES TimeTableEntry(stationIndex) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY(endIndex) REFERENCES TimeTableEntry(stationIndex) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE ChairCarTicket(
