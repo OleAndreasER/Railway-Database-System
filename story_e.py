@@ -30,7 +30,7 @@ def main():
     connection.commit()
     connection.close();
 
-    print("Added:", (customer_id, name, email, mobile_nr))
+    print(f"Added: {(customer_id, name, email, mobile_nr)}")
 
 
 valid_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'

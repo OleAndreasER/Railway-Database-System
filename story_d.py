@@ -1,6 +1,4 @@
 import sqlite3
-from sqlite3 import Cursor 
-import re
 from datetime import date
 '''
 d) Bruker skal kunne søke etter togruter som går mellom en startstasjon og en sluttstasjon, med

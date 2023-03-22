@@ -1,5 +1,4 @@
 import sqlite3
-from sqlite3 import Cursor 
 '''
 h) All information about purchases made for future trips should be available for a user. This
 functionality should be programmed.
