@@ -4,40 +4,42 @@ Nordlandsbanen som er beskrevet i vedlegget til denne oppgave. Dette kan gjøres
 dere trenger ikke å programmere støtte for denne funksjonaliteten.
 */
 
--- Trondheim og steinkjer
-
-INSERT INTO TrainRoute(trainRouteID, direction, trackSectionID, arrangementId, operatorId)
+INSERT INTO TrainRoute(
+    trainRouteID,
+    direction,
+    trackSectionID,
+    arrangementId,
+    operatorId
+)
 VALUES
+    -- This train route runs every weekday and has a car setup with two chair cars of type SJ-chair car-1
     (1, 'main', 1, 1, 'SJ'),
--- This train route runs every weekday and has a car setup with two chair cars of type SJ-chair car-1
-    (2, 'main', 1 , 2, 'SJ'),
--- This train route runs every weekday and has a car setup with one chair car of type SJ-chair car-1, followed by one sleeping car of type SJ-sleeping car-1
+    -- This train route runs every weekday and has a car setup with one chair car of type SJ-chair car-1, followed by one sleeping car of type SJ-sleeping car-1
+    (2, 'main', 1, 2, 'SJ'),
+    -- This train route runs every weekday (Monday to Friday) and has a car setup with one chair car of typeSJ-chair car-1
     (3, 'opposite', 1, 3, 'SJ');
--- This train route runs every weekday (Monday to Friday) and has a car setup with one chair car of typeSJ-chair car-1
 
 
 INSERT INTO Operator(operatorId)
 VALUES ('SJ');
 
-INSERT INTO Car(carId,operatorId)
+INSERT INTO Car(carId, operatorId)
 VALUES
     (1, 'SJ'),
     (2, 'SJ');
 
-INSERT INTO CarInArrangement(arrangementId,carNr,carId)
+INSERT INTO CarInArrangement(arrangementId, carNr, carId)
 VALUES
     (1, 1, 1),
     (1, 2, 1),
-
     (2, 1, 1),
     (2, 2, 2),
-
     (3, 1, 1);
 
 INSERT INTO ChairCar(carId)
 VALUES (1);
 
-INSERT INTO SeatRow(carId,rowNr)
+INSERT INTO SeatRow(carId, rowNr)
 VALUES
     (1, 1),
     (1, 2),
@@ -45,18 +47,18 @@ VALUES
 
 INSERT INTO Seat(carId, rowNr, seatNr)
 VALUES
-    (1,1,1),
-    (1,1,2),
-    (1,1,3),
-    (1,1,4),
-    (1,2,5),
-    (1,2,6),
-    (1,2,7),
-    (1,2,8),
-    (1,3,9),
-    (1,3,10),
-    (1,3,11),
-    (1,3,12);
+    (1, 1, 1),
+    (1, 1, 2),
+    (1, 1, 3),
+    (1, 1, 4),
+    (1, 2, 5),
+    (1, 2, 6),
+    (1, 2, 7),
+    (1, 2, 8),
+    (1, 3, 9),
+    (1, 3, 10),
+    (1, 3, 11),
+    (1, 3, 12);
 
 
 INSERT INTO SleepingCar(carId)
@@ -69,16 +71,16 @@ VALUES
     (2, 3),
     (2, 4);
 
-INSERT INTO Bed(carId,bedNr)
+INSERT INTO Bed(carId, bedNr)
 VALUES
-    (2,1),
-    (2,2),
-    (2,3),
-    (2,4),
-    (2,5),
-    (2,6),
-    (2,7),
-    (2,8);
+    (2, 1),
+    (2, 2),
+    (2, 3),
+    (2, 4),
+    (2, 5),
+    (2, 6),
+    (2, 7),
+    (2, 8);
 
 INSERT INTO CarArrangement(arrangementId)
 VALUES
@@ -86,7 +88,13 @@ VALUES
     (2),
     (3);
 
-INSERT INTO TimeTableEntry(entryId,time,trackSectionID,stationIndex,trainRouteID)
+INSERT INTO TimeTableEntry(
+    entryId,
+    time,
+    trackSectionID,
+    stationIndex,
+    trainRouteID
+)
 VALUES
     (1, '07:49:00', 1, 0, 1),
     (2, '09:51:00', 1, 1, 1),
@@ -115,7 +123,7 @@ VALUES
     ('thursday'),
     ('friday');
 
-INSERT INTO RunsOnWeekday(trainRouteID,weekdayName)
+INSERT INTO RunsOnWeekday(trainRouteID, weekdayName)
 VALUES
     (1, 'monday'),
     (1, 'tuesday'),
