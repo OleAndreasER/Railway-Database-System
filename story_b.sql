@@ -5,9 +5,9 @@ dere trenger ikke å programmere støtte for denne funksjonaliteten.
 */
 
 INSERT INTO TrainRoute(
-    trainRouteID,
+    trainRouteId,
     direction,
-    trackSectionID,
+    trackSectionId,
     arrangementId,
     operatorId
 )
@@ -91,9 +91,9 @@ VALUES
 INSERT INTO TimeTableEntry(
     entryId,
     time,
-    trackSectionID,
+    trackSectionId,
     stationIndex,
-    trainRouteID
+    trainRouteId
 )
 VALUES
     (1, '07:49:00', 1, 0, 1),
@@ -123,7 +123,7 @@ VALUES
     ('thursday'),
     ('friday');
 
-INSERT INTO RunsOnWeekday(trainRouteID, weekdayName)
+INSERT INTO RunsOnWeekday(trainRouteId, weekdayName)
 VALUES
     (1, 'monday'),
     (1, 'tuesday'),

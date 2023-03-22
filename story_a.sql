@@ -16,7 +16,7 @@ VALUES
     ('Steinkjer', 3.6),
 	('Trondheim', 5.1);
 
-INSERT INTO StationOnTrack(trackSectionID, stationIndex, stationName)
+INSERT INTO StationOnTrack(trackSectionId, stationIndex, stationName)
 VALUES
     (1, 0, 'Trondheim'),
     (1, 1, 'Steinkjer'),
@@ -25,7 +25,7 @@ VALUES
     (1, 4, 'Fauske'),
     (1, 5, 'Bodø');
 
-INSERT INTO SubSection(subSectionID, length, trackType)
+INSERT INTO SubSection(subSectionId, length, trackType)
 VALUES
     (1, 120, 'double'),
     (2, 280, 'single'),
@@ -33,7 +33,7 @@ VALUES
     (4, 170, 'single'),
     (5, 60, 'single');
 
-INSERT INTO BetweenStations(subSectionID, stationName)
+INSERT INTO BetweenStations(subSectionId, stationName)
 VALUES
     (1, 'Trondheim'),
     (1, 'Steinkjer'),
@@ -46,7 +46,7 @@ VALUES
     (5, 'Fauske'),
     (5, 'Bodø');
 
-INSERT INTO SubSectionOf(subSectionID, trackSectionID)
+INSERT INTO SubSectionOf(subSectionId, trackSectionId)
 VALUES
     (1, 1),
     (2, 1),
