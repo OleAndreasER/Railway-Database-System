@@ -1,5 +1,4 @@
 import sqlite3
-from sqlite3 import Cursor 
 '''
 g) Registered customers should be able to find available tickets for a desired train route and
 purchase the tickets they would like. This functionality should be programmed.

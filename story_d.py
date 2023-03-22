@@ -16,6 +16,8 @@ weekdays = [
 ]
 
 def main():
+    startStation = input("Start station: ")
+    endStation = input("End station: ")
     time = input("Time (HH:MM): ")
     if not time_is_valid(time):
         print("Invalid time")
@@ -33,14 +35,58 @@ def main():
     weekdayToday = weekdays[weekdayIndex]
     weekdayTomorrow = weekdays[(weekdayIndex + 1) % len(weekdays)]
 
-    print(time)
-    print(weekdayToday)
-    print(weekdayTomorrow)
-
     connection = sqlite3.connect("railwaySystem.db")
     cursor = connection.cursor()
 
-    #query
+    cursor.execute('''
+        SELECT
+            RunsOnWeekday.weekdayName,
+            StartStationEntry.time,
+            EndStationEntry.time
+        FROM RunsOnWeekday
+        INNER JOIN TrainRoute ON
+            TrainRoute.trainRouteId = RunsOnWeekday.trainRouteId
+        INNER JOIN TimeTableEntry AS StartStationEntry ON
+            TrainRoute.trainRouteId = StartStationEntry.trainRouteId
+        INNER JOIN TimeTableEntry AS EndStationEntry ON
+            TrainRoute.trainRouteId = EndStationEntry.trainRouteId
+        INNER JOIN StationOnTrack AS StartStation ON
+            StartStationEntry.trackSectionId = StartStation.trackSectionId AND
+            StartStationEntry.stationIndex = StartStation.stationIndex
+        INNER JOIN StationOnTrack AS EndStation ON
+            EndStationEntry.trackSectionId = EndStation.trackSectionId AND
+            EndStationEntry.stationIndex = EndStation.stationIndex
+        WHERE
+            ((weekdayName = ? AND StartStationEntry.time > ?) OR
+            weekdayName = ?) AND
+            StartStation.stationName = ? AND
+            EndStation.stationName = ? AND
+            ((TrainRoute.direction = 'main' AND
+            StartStation.stationIndex <= EndStation.stationIndex) OR
+            (TrainRoute.direction = 'opposite' AND
+            EndStation.stationIndex <= StartStation.stationIndex))
+        ORDER BY
+            StartStationEntry.time ASC
+    ''', (weekdayToday, time, weekdayTomorrow, startStation, endStation))
+
+    rows = cursor.fetchall()
+    byDay = {
+        weekdayToday: [
+            (startTime, endTime)
+            for (weekday, startTime, endTime) in rows
+            if weekday == weekdayToday
+        ],
+        weekdayTomorrow: [
+            (startTime, endTime)
+            for (weekday, startTime, endTime) in rows
+            if weekday == weekdayTomorrow
+        ],
+    }
+
+    for (weekday, rows) in byDay.items():
+        print(f"{weekday.capitalize()}:")
+        for (startTime, endTime) in rows:
+            print(f"  {startStation} ({startTime[:-3]}) - {endStation} ({endTime[:-3]})")
 
     connection.close();
 
