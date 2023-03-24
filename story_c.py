@@ -1,7 +1,7 @@
 import sqlite3
 '''
-c) For en stasjon som oppgis, skal bruker få ut alle togruter som er innom stasjonen en gitt ukedag.
-Denne funksjonaliteten skal programmeres.
+c) For a specified station, the user should be able to get all train routes that stop at the station on a
+given weekday. This functionality should be programmed.
 '''
 
 def main():

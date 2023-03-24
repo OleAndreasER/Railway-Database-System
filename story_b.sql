@@ -1,7 +1,7 @@
 /*
-b) Dere skal kunne registrere data om togruter. Dere skal legge inn data for de tre togrutene på
-Nordlandsbanen som er beskrevet i vedlegget til denne oppgave. Dette kan gjøres med et skript,
-dere trenger ikke å programmere støtte for denne funksjonaliteten.
+b) You are supposed to register data about train routes. You should enter data for the three train
+routs on Nordlandsbanen described in the appendix to this task. This can be done with a script,
+you do not need to program support for this functionality.
 */
 
 INSERT INTO TrainRoute(

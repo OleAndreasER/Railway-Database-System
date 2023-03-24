@@ -1,9 +1,9 @@
 import sqlite3
 from datetime import date
 '''
-d) Bruker skal kunne søke etter togruter som går mellom en startstasjon og en sluttstasjon, med
-utgangspunkt i en dato og et klokkeslett. Alle ruter den samme dagen og den neste skal
-returneres, sortert på tid. Denne funksjonaliteten skal programmeres.
+d) The user should be able to search for train routes going between a starting station and an ending
+station based on date and time. All routes for the same day and the next should be returned and
+sorted by time. This functionality should be programmed.
 '''
 days = [
     'monday',

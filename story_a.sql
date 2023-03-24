@@ -1,7 +1,7 @@
 /*
-a) Databasen skal kunne registrere data om alle jernbanestrekninger i Norge. Dere skal legge inn
-data for Nordlandsbanen (som vist i figuren). Dette kan gjøres med et skript, dere trenger ikke å
-programmere støtte for denne funksjonaliteten.
+a) The database should be able to register data about all railway routes in Norway. You should enter
+data for Nordlandsbanen (as shown in the figure above). This can be done with a script and you
+do not need to program support for this functionality.
 */
 
 INSERT INTO TrackSection(trackSectionId, name, drivingEnergy)

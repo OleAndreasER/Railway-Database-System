@@ -2,7 +2,8 @@ import sqlite3
 from sqlite3 import Cursor 
 import re
 '''
-e) En bruker skal kunne registrere seg i kunderegisteret. Denne funksjonaliteten skal programmeres.
+e) The user should be able to register in the customer registry. This functionality should be
+programmed.
 '''
 
 def main():
