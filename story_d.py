@@ -16,24 +16,24 @@ days = [
 ]
 
 def main():
-    startStation = input("Start station: ")
-    endStation = input("End station: ")
+    start_station = input("Start station: ")
+    end_station = input("End station: ")
     time = input("Time (HH:MM): ")
     if not time_is_valid(time):
         print("Invalid time")
         return
     time += ":00"
 
-    dateStr = input("Date (YYYY-MM-DD): ")
+    date_str = input("Date (YYYY-MM-DD): ")
     
     try:
-        dayIndex = date.fromisoformat(dateStr).weekday()
+        day_index = date.fromisoformat(date_str).weekday()
     except:
         print("Invalid date")
         return
 
-    dayToday = days[dayIndex]
-    dayTomorrow = days[(dayIndex + 1) % len(days)]
+    day_today = days[day_index]
+    day_tomorrow = days[(day_index + 1) % len(days)]
 
     connection = sqlite3.connect("railwaySystem.db")
     cursor = connection.cursor()
@@ -67,36 +67,36 @@ def main():
             EndStation.stationIndex <= StartStation.stationIndex))
         ORDER BY
             StartStationEntry.time ASC
-    ''', (dayToday, time, dayTomorrow, startStation, endStation))
+    ''', (day_today, time, day_tomorrow, start_station, end_station))
 
     rows = cursor.fetchall()
-    byDay = {
-        dayToday: [
-            (startTime, endTime)
-            for (day, startTime, endTime) in rows
-            if day == dayToday
+    by_day = {
+        day_today: [
+            (start_time, end_time)
+            for (day, start_time, end_time) in rows
+            if day == day_today
         ],
-        dayTomorrow: [
-            (startTime, endTime)
-            for (day, startTime, endTime) in rows
-            if day == dayTomorrow
+        day_tomorrow: [
+            (start_time, end_time)
+            for (day, start_time, end_time) in rows
+            if day == day_tomorrow
         ],
     }
 
-    for (day, rows) in byDay.items():
+    for (day, rows) in by_day.items():
         print(f"{day.capitalize()}:")
-        for (startTime, endTime) in rows:
-            print(f"  {startStation} ({startTime[:-3]}) - {endStation} ({endTime[:-3]})")
+        for (start_time, end_time) in rows:
+            print(f"  {start_station} ({start_time[:-3]}) - {end_station} ({end_time[:-3]})")
 
     connection.close();
 
 def time_is_valid(time: str) -> bool:
-    split = time.split(":")
-    if not len(split) == 2: return False
-    if not split[0].isdigit(): return False
-    if not split[1].isdigit(): return False
-    hour = int(split[0])
-    minute = int(split[1])
+    time_parts = time.split(":")
+    if not len(time_parts) == 2: return False
+    if not time_parts[0].isdigit(): return False
+    if not time_parts[1].isdigit(): return False
+    hour = int(time_parts[0])
+    minute = int(time_parts[1])
     if hour < 0 or hour >= 24: return False
     if minute < 0 or minute >= 60: return False
     return True
