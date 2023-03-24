@@ -85,17 +85,17 @@ CREATE TABLE TrainOccurence(
     FOREIGN KEY(trainRouteId) REFERENCES TrainRoute(trainRouteId) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE Weekday(
+CREATE TABLE Day(
     name TEXT,
     PRIMARY KEY(name)
 );
 
-CREATE TABLE RunsOnWeekday(
+CREATE TABLE RunsOnDay(
     trainRouteId INTEGER,
-    weekdayName TEXT,
-    PRIMARY KEY (trainRouteId, weekdayName),
+    DayName TEXT,
+    PRIMARY KEY (trainRouteId, DayName),
     FOREIGN KEY(trainRouteId) REFERENCES TrainRoute(trainRouteId) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY(weekdayName) REFERENCES Weekday(name) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY(DayName) REFERENCES Day(name) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE CarInArrangement(

@@ -6,7 +6,7 @@ Denne funksjonaliteten skal programmeres.
 
 def main():
     station = input("Name of station: ")
-    weekday = input("Weekday: ").lower()
+    day = input("day: ").lower()
 
     connection = sqlite3.connect("railwaySystem.db")
     cursor = connection.cursor()
@@ -21,16 +21,16 @@ def main():
             TimeTableEntry.stationIndex = StationOnTrack.stationIndex
         INNER JOIN TrainRoute ON
             TimeTableEntry.trainRouteId = TrainRoute.TrainRouteId
-        INNER JOIN RunsOnWeekday ON
-            TrainRoute.trainRouteId = RunsOnWeekday.trainRouteId
+        INNER JOIN RunsOnDay ON
+            TrainRoute.trainRouteId = RunsOnDay.trainRouteId
         INNER JOIN TrackSection ON
             TrainRoute.trackSectionId = TrackSection.trackSectionId
         WHERE
             StationOnTrack.stationName = ? AND
-            RunsOnWeekday.weekdayName = ?
+            RunsOnDay.DayName = ?
         ORDER BY
             TimeTableEntry.time DESC
-    ''', (station, weekday))
+    ''', (station, day))
 
     for (time, trackSection) in cursor.fetchall():
         print(f"{time} on {trackSection}")

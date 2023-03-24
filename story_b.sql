@@ -115,7 +115,7 @@ VALUES
     (15, '12:31:00', 1, 1, 3),
     (16, '14:13:00', 1, 0, 3);
 
-INSERT INTO Weekday(name)
+INSERT INTO Day(name)
 VALUES
     ('monday'),
     ('tuesday'),
@@ -125,7 +125,7 @@ VALUES
     ('saturday'),
     ('sunday');
 
-INSERT INTO RunsOnWeekday(trainRouteId, weekdayName)
+INSERT INTO RunsOnDay(trainRouteId, DayName)
 VALUES
     (1, 'monday'),
     (1, 'tuesday'),

@@ -5,7 +5,7 @@ d) Bruker skal kunne søke etter togruter som går mellom en startstasjon og en 
 utgangspunkt i en dato og et klokkeslett. Alle ruter den samme dagen og den neste skal
 returneres, sortert på tid. Denne funksjonaliteten skal programmeres.
 '''
-weekdays = [
+days = [
     'monday',
     'tuesday',
     'wednesday',
@@ -27,25 +27,25 @@ def main():
     dateStr = input("Date (YYYY-MM-DD): ")
     
     try:
-        weekdayIndex = date.fromisoformat(dateStr).weekday()
+        dayIndex = date.fromisoformat(dateStr).weekday()
     except:
         print("Invalid date")
         return
 
-    weekdayToday = weekdays[weekdayIndex]
-    weekdayTomorrow = weekdays[(weekdayIndex + 1) % len(weekdays)]
+    dayToday = days[dayIndex]
+    dayTomorrow = days[(dayIndex + 1) % len(days)]
 
     connection = sqlite3.connect("railwaySystem.db")
     cursor = connection.cursor()
 
     cursor.execute('''
         SELECT
-            RunsOnWeekday.weekdayName,
+            RunsOnDay.DayName,
             StartStationEntry.time,
             EndStationEntry.time
-        FROM RunsOnWeekday
+        FROM RunsOnDay
         INNER JOIN TrainRoute ON
-            TrainRoute.trainRouteId = RunsOnWeekday.trainRouteId
+            TrainRoute.trainRouteId = RunsOnDay.trainRouteId
         INNER JOIN TimeTableEntry AS StartStationEntry ON
             TrainRoute.trainRouteId = StartStationEntry.trainRouteId
         INNER JOIN TimeTableEntry AS EndStationEntry ON
@@ -57,8 +57,8 @@ def main():
             EndStationEntry.trackSectionId = EndStation.trackSectionId AND
             EndStationEntry.stationIndex = EndStation.stationIndex
         WHERE
-            ((weekdayName = ? AND StartStationEntry.time > ?) OR
-            weekdayName = ?) AND
+            ((DayName = ? AND StartStationEntry.time > ?) OR
+            DayName = ?) AND
             StartStation.stationName = ? AND
             EndStation.stationName = ? AND
             ((TrainRoute.direction = 'main' AND
@@ -67,24 +67,24 @@ def main():
             EndStation.stationIndex <= StartStation.stationIndex))
         ORDER BY
             StartStationEntry.time ASC
-    ''', (weekdayToday, time, weekdayTomorrow, startStation, endStation))
+    ''', (dayToday, time, dayTomorrow, startStation, endStation))
 
     rows = cursor.fetchall()
     byDay = {
-        weekdayToday: [
+        dayToday: [
             (startTime, endTime)
-            for (weekday, startTime, endTime) in rows
-            if weekday == weekdayToday
+            for (day, startTime, endTime) in rows
+            if day == dayToday
         ],
-        weekdayTomorrow: [
+        dayTomorrow: [
             (startTime, endTime)
-            for (weekday, startTime, endTime) in rows
-            if weekday == weekdayTomorrow
+            for (day, startTime, endTime) in rows
+            if day == dayTomorrow
         ],
     }
 
-    for (weekday, rows) in byDay.items():
-        print(f"{weekday.capitalize()}:")
+    for (day, rows) in byDay.items():
+        print(f"{day.capitalize()}:")
         for (startTime, endTime) in rows:
             print(f"  {startStation} ({startTime[:-3]}) - {endStation} ({endTime[:-3]})")
 
