@@ -21,8 +21,8 @@ def main():
         SELECT
             TrainOccurence.date,
             TimeTableEntry.time,
-            Ticket.StartIndex,
-            Ticket.endIndex,
+            StartStation.stationName,
+            EndStation.stationName,
             ChairCarTicket.rowNr,
             ChairCarTicket.seatNr,
             SleepingCarTicket.bedNr
@@ -36,6 +36,10 @@ def main():
             TrainOccurence.trainOccurenceId = CustomerOrder.trainOccurenceId
         INNER JOIN TimeTableEntry ON
             TimeTableEntry.trainRouteId = TrainOccurence.trainRouteId
+        INNER JOIN StationOnTrack as StartStation ON
+            StartStation.stationIndex = Ticket.startIndex
+        INNER JOIN StationOnTrack as EndStation ON
+            EndStation.stationIndex = Ticket.endIndex
         LEFT JOIN ChairCarTicket ON
 		    ChairCarTicket.ticketId = Ticket.ticketId
 	    LEFT JOIN SleepingCarTicket ON
@@ -48,7 +52,7 @@ def main():
     
 
     for (date,tid,startStation,endStation,rowNr, seatNr, bedNr) in cursor.fetchall():
-        print(f"dato: {date} boardingtidspunkt: {tid} fra stasjon {startStation} til stasjon {endStation}. rad: {rowNr} sete: {seatNr} seng: {bedNr}")
+        print(f"dato: {date} boardingtidspunkt: {tid} fra {startStation} til {endStation}. rad: {rowNr} sete: {seatNr} seng: {bedNr}")
 
     connection.close();
 
