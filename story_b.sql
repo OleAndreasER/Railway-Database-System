@@ -138,7 +138,7 @@ VALUES
     (2, 'wednesday'),
     (2, 'thursday'),
     (2, 'friday'),
-    (2,'saturday'),
+    (2, 'saturday'),
     (2, 'sunday'),
 
     (3, 'monday'),

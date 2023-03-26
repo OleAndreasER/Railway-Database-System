@@ -6,7 +6,7 @@ given weekday. This functionality should be programmed.
 
 def main():
     station = input("Name of station: ")
-    day = input("day: ").lower()
+    day = input("Day of the week: ").lower()
 
     connection = sqlite3.connect("railwaySystem.db")
     cursor = connection.cursor()

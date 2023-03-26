@@ -1,6 +1,5 @@
 import sqlite3
 import datetime
-
 '''
 h) All information about purchases made for future trips should be available for a user. This
 functionality should be programmed.

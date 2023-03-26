@@ -33,7 +33,6 @@ def main():
 
     print(f"Added: {(customer_id, name, email, mobile_nr)}")
 
-
 valid_email = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
 def email_is_valid(email: str) -> bool:
     return re.fullmatch(valid_email, email)
