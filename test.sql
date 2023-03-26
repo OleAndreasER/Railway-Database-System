@@ -150,21 +150,21 @@
                 WHERE
                     TrainOccurence.trainOccurenceId = :train_occurence_id AND
 
-                    ((:start_index >= Ticket.startIndex AND
+                    (:start_index >= Ticket.startIndex AND
                     :start_index < Ticket.endIndex) OR
                     (:end_index > Ticket.startIndex AND
                     :end_index <= Ticket.endIndex) OR
                     (Ticket.startIndex >= :start_index AND
                     Ticket.startIndex < :end_index) OR
                     (Ticket.endIndex > :start_index AND
-                    Ticket.endIndex <= :end_index))
+                    Ticket.endIndex <= :end_index)
             )
 
-                    ((:end_index >= Ticket.endIndex AND //
-                    :end_index < Ticket.startIndex) OR //
-                    (:start_index > Ticket.endIndex AND //
-                    :start_index <= Ticket.startIndex) OR //
-                    (Ticket.endIndex >= :end_index AND //
-                    Ticket.endIndex < :start_index) OR //
-                    (Ticket.startIndex > :end_index AND //
-                    Ticket.startIndex <= :start_index)) //
+                    (:end_index >= Ticket.endIndex AND
+                    :end_index < Ticket.startIndex) OR
+                    (:start_index > Ticket.endIndex AND
+                    :start_index <= Ticket.startIndex) OR
+                    (Ticket.endIndex >= :end_index AND
+                    Ticket.endIndex < :start_index) OR
+                    (Ticket.startIndex > :end_index AND
+                    Ticket.startIndex <= :start_index)

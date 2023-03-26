@@ -87,40 +87,40 @@ def main():
     ''', (customer_id, train_occurence_id))
     order_nr = cursor.lastrowid
 
-    is_chair_car_id = lambda car_id: any(
-        car_id == chair_car[0]
+    is_chair_car_nr = lambda car_nr: any(
+        car_nr == chair_car[0]
         for chair_car in available_chair_car_tickets
     )
 
-    is_sleeping_car_id = lambda car_id: any(
-        car_id == sleeping_car[0]
+    is_sleeping_car_nr = lambda car_nr: any(
+        car_nr == sleeping_car[0]
         for sleeping_car in available_sleeping_car_tickets
     )
 
-    def purchase_chair_car_ticket(car_id: int, row_nr: int, seat_nr: int):
+    def purchase_chair_car_ticket(car_nr: int, row_nr: int, seat_nr: int):
         insert_chair_car_ticket(
             order_nr,
             track_section_id,
             start_index,
             end_index,
-            car_id,
+            car_nr,
             seat_nr,
             row_nr,
             cursor
         )
-        available_chair_car_tickets.remove((car_id, row_nr, seat_nr))
+        available_chair_car_tickets.remove((car_nr, row_nr, seat_nr))
     
-    def purchase_sleeping_car_ticket(car_id: int, bed_nr: int):
+    def purchase_sleeping_car_ticket(car_nr: int, bed_nr: int):
         insert_sleeping_car_ticket(
             order_nr,
             track_section_id,
             start_index,
             end_index,
-            car_id,
+            car_nr,
             bed_nr,
             cursor
         )
-        available_sleeping_car_tickets.remove((car_id, bed_nr))
+        available_sleeping_car_tickets.remove((car_nr, bed_nr))
 
 
     # ADD TICKETS TO ORDER
@@ -129,20 +129,20 @@ def main():
         if "y" != input("Do you want to add a ticket to your order (y/N)? ").lower():
             break
 
-        car_id = maybe_int_input("Car: ")
+        car_nr = maybe_int_input("Car: ")
 
-        if is_chair_car_id(car_id):
+        if is_chair_car_nr(car_nr):
             row_nr = maybe_int_input("Row: ")
             seat_nr = maybe_int_input("Seat: ")
-            if (car_id, row_nr, seat_nr) in available_chair_car_tickets:
-                purchase_chair_car_ticket(car_id, row_nr, seat_nr)
+            if (car_nr, row_nr, seat_nr) in available_chair_car_tickets:
+                purchase_chair_car_ticket(car_nr, row_nr, seat_nr)
                 purchased_ticket = True
             else:
                 print("That is not an available seat")
-        elif is_sleeping_car_id(car_id):
+        elif is_sleeping_car_nr(car_nr):
             bed_nr = maybe_int_input("Bed: ")
-            if (car_id, bed_nr) in available_sleeping_car_tickets:
-                purchase_sleeping_car_ticket(car_id, bed_nr)
+            if (car_nr, bed_nr) in available_sleeping_car_tickets:
+                purchase_sleeping_car_ticket(car_nr, bed_nr)
                 purchased_ticket = True
             else:
                 print("That is not an available bed")
@@ -177,23 +177,23 @@ def insert_sleeping_car_ticket(
     track_section_id: int,
     start_index: int,
     end_index: int,
-    car_id: int,
+    car_nr: int,
     bed_nr: int,
     cursor: Cursor
 ):
     insert_ticket(order_nr, track_section_id, start_index, end_index, cursor)
     ticket_id = cursor.lastrowid
     cursor.execute('''
-        INSERT INTO SleepingCarTicket(ticketId, carId, bedNr)
+        INSERT INTO SleepingCarTicket(ticketId, carNr, bedNr)
         VALUES (?, ?, ?)
-    ''', (ticket_id, car_id, bed_nr))
+    ''', (ticket_id, car_nr, bed_nr))
 
 def insert_chair_car_ticket(
     order_nr: int,
     track_section_id: int,
     start_index: int,
     end_index: int,
-    car_id: int,
+    car_nr: int,
     seat_nr: int,
     row_nr: int,
     cursor: Cursor
@@ -201,9 +201,9 @@ def insert_chair_car_ticket(
     insert_ticket(order_nr, track_section_id, start_index, end_index, cursor)
     ticket_id = cursor.lastrowid
     cursor.execute('''
-        INSERT INTO ChairCarTicket(ticketId, carId, rowNr, seatNr)
+        INSERT INTO ChairCarTicket(ticketId, carNr, rowNr, seatNr)
         VALUES (?, ?, ?, ?)
-    ''', (ticket_id, car_id, row_nr, seat_nr))
+    ''', (ticket_id, car_nr, row_nr, seat_nr))
 
 overlaps = {
     "main": '''
@@ -243,7 +243,7 @@ def get_available_chair_car_tickets(
 ) -> list:
     cursor.execute(f'''
         SELECT
-            CarInArrangement.carId,
+            CarInArrangement.carNr,
             Seatrow.rowNr,
             Seat.seatNr
         FROM CarArrangement
@@ -258,9 +258,9 @@ def get_available_chair_car_tickets(
             SeatRow.rowNr = Seat.rowNr
         WHERE
             CarArrangement.arrangementId = :arrangement_id AND
-            (Seat.carId, Seat.seatNr, Seat.rowNr) NOT IN (
+            (CarInArrangement.carNr, Seat.seatNr, Seat.rowNr) NOT IN (
                 SELECT
-                    carId,
+                    carNr,
                     seatNr,
                     rowNr
                 FROM TrainOccurence
@@ -309,9 +309,9 @@ def get_available_sleeping_car_tickets(
             SleepingCar.carId = Bed.carId
         WHERE
             CarArrangement.arrangementId = ? AND
-            (SleepingCar.carId, FLOOR((bedNr + 1) / 2)) NOT IN (
+            (CarInArrangement.carNr, FLOOR((bedNr + 1) / 2)) NOT IN (
                 SELECT
-                    carId,
+                    carNr,
                     FLOOR((bedNr + 1) / 2)
                 FROM TrainOccurence
                 INNER JOIN CustomerOrder ON
@@ -379,13 +379,13 @@ def pretty_print(seat_tickets: list, bed_tickets: list):
     if seat_tickets:
         print("Chair cars:")
         print("Car - Row - Seat")
-        for car_id, row_nr, seat_nr in seat_tickets:
-            print(f"{car_id} - {row_nr} - {seat_nr}")
+        for car_nr, row_nr, seat_nr in seat_tickets:
+            print(f"{car_nr} - {row_nr} - {seat_nr}")
 
     if bed_tickets:
         print("Sleeping cars:")
         print("Car - Compartment - Bed")
-        for car_id, bed_nr in bed_tickets:
-            print(f"{car_id} - {(bed_nr + 1) // 2} - {bed_nr}")
+        for car_nr, bed_nr in bed_tickets:
+            print(f"{car_nr} - {(bed_nr + 1) // 2} - {bed_nr}")
 
 if __name__ == "__main__": main()
