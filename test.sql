@@ -117,3 +117,54 @@
                 Ticket.ticketId = SleepingCarTicket.ticketId
             WHERE
                 TrainOccurence = ?
+
+
+        SELECT
+            CarInArrangement.carId,
+            Seatrow.rowNr,
+            Seat.seatNr
+        FROM CarArrangement
+        INNER JOIN CarInArrangement ON
+            CarArrangement.arrangementId = CarInArrangement.arrangementId
+        INNER JOIN ChairCar ON
+            CarInArrangement.carId = ChairCar.carId
+        INNER JOIN SeatRow ON
+            ChairCar.carId = SeatRow.carId
+        INNER JOIN Seat ON
+            SeatRow.carId = Seat.carId AND
+            SeatRow.rowNr = Seat.rowNr
+        WHERE
+            CarArrangement.arrangementId = :arrangement_id AND
+            (Seat.carId, Seat.seatNr, Seat.rowNr) NOT IN (
+                SELECT
+                    carId,
+                    seatNr,
+                    rowNr
+                FROM TrainOccurence
+                INNER JOIN CustomerOrder ON
+                    TrainOccurence.trainOccurenceId = CustomerOrder.trainOccurenceId
+                INNER JOIN Ticket ON
+                    CustomerOrder.orderNr = Ticket.orderNr
+                INNER JOIN ChairCarTicket ON
+                    Ticket.ticketId = ChairCarTicket.ticketId
+                WHERE
+                    TrainOccurence.trainOccurenceId = :train_occurence_id AND
+
+                    ((:start_index >= Ticket.startIndex AND
+                    :start_index < Ticket.endIndex) OR
+                    (:end_index > Ticket.startIndex AND
+                    :end_index <= Ticket.endIndex) OR
+                    (Ticket.startIndex >= :start_index AND
+                    Ticket.startIndex < :end_index) OR
+                    (Ticket.endIndex > :start_index AND
+                    Ticket.endIndex <= :end_index))
+            )
+
+                    ((:end_index >= Ticket.endIndex AND //
+                    :end_index < Ticket.startIndex) OR //
+                    (:start_index > Ticket.endIndex AND //
+                    :start_index <= Ticket.startIndex) OR //
+                    (Ticket.endIndex >= :end_index AND //
+                    Ticket.endIndex < :start_index) OR //
+                    (Ticket.startIndex > :end_index AND //
+                    Ticket.startIndex <= :start_index)) //

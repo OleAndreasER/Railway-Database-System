@@ -46,7 +46,8 @@ def main():
         end_index,
         train_occurence_id,
         arrangement_id,
-        track_section_id
+        track_section_id,
+        direction
     ) = train_route_data
 
     # AVAILABLE TICKETS
@@ -55,6 +56,7 @@ def main():
         end_index,
         train_occurence_id,
         arrangement_id,
+        direction,
         cursor
     )
 
@@ -203,6 +205,29 @@ def insert_chair_car_ticket(
         VALUES (?, ?, ?, ?)
     ''', (ticket_id, car_id, row_nr, seat_nr))
 
+overlaps = {
+    "main": '''
+        (:start_index >= Ticket.startIndex AND
+        :start_index < Ticket.endIndex) OR
+        (:end_index > Ticket.startIndex AND
+        :end_index <= Ticket.endIndex) OR
+        (Ticket.startIndex >= :start_index AND
+        Ticket.startIndex < :end_index) OR
+        (Ticket.endIndex > :start_index AND
+        Ticket.endIndex <= :end_index)
+    ''',
+    "opposite": '''
+        (:end_index >= Ticket.endIndex AND
+        :end_index < Ticket.startIndex) OR
+        (:start_index > Ticket.endIndex AND
+        :start_index <= Ticket.startIndex) OR
+        (Ticket.endIndex >= :end_index AND
+        Ticket.endIndex < :start_index) OR
+        (Ticket.startIndex > :end_index AND
+        Ticket.startIndex <= :start_index)
+    '''
+}
+
 '''
 It should not be possible to buy tickets for seats that are 
 already sold. However, the same seat can be sold to several
@@ -213,9 +238,10 @@ def get_available_chair_car_tickets(
     end_index: int,
     train_occurence_id: int,
     arrangement_id: int,
+    direction: str,
     cursor: Cursor
 ) -> list:
-    cursor.execute('''
+    cursor.execute(f'''
         SELECT
             CarInArrangement.carId,
             Seatrow.rowNr,
@@ -246,14 +272,7 @@ def get_available_chair_car_tickets(
                     Ticket.ticketId = ChairCarTicket.ticketId
                 WHERE
                     TrainOccurence.trainOccurenceId = :train_occurence_id AND
-                    ((:start_index >= Ticket.startIndex AND
-                    :start_index < Ticket.endIndex) OR
-                    (:end_index > Ticket.startIndex AND
-                    :end_index <= Ticket.endIndex) OR
-                    (Ticket.startIndex >= :start_index AND
-                    Ticket.startIndex < :end_index) OR
-                    (Ticket.endIndex > :start_index AND
-                    Ticket.endIndex <= :end_index))
+                    ({overlaps[direction]})
             )
     ''', {
         "arrangement_id": arrangement_id,
@@ -333,7 +352,8 @@ def get_train_route_data(
             EndStation.stationIndex,
             trainOccurenceId,
             arrangementId,
-            TrainRoute.trackSectionId
+            TrainRoute.trackSectionId,
+            TrainRoute.direction
         FROM TrainOccurence
         INNER JOIN TrainRoute ON
             TrainRoute.trainRouteId = TrainOccurence.trainRouteId
@@ -356,15 +376,16 @@ def get_train_route_data(
     return cursor.fetchone()
 
 def pretty_print(seat_tickets: list, bed_tickets: list):
-    print("Chair cars:")
-    print("Car - Row - Seat")
-    for car_id, row_nr, seat_nr in seat_tickets:
-        print(f"{car_id} - {row_nr} - {seat_nr}")
+    if seat_tickets:
+        print("Chair cars:")
+        print("Car - Row - Seat")
+        for car_id, row_nr, seat_nr in seat_tickets:
+            print(f"{car_id} - {row_nr} - {seat_nr}")
 
-    print("Sleeping cars:")
-    print("Car - Compartment - Bed")
-    for car_id, bed_nr in bed_tickets:
-        print(f"{car_id} - {(bed_nr + 1) // 2} - {bed_nr}")
-
+    if bed_tickets:
+        print("Sleeping cars:")
+        print("Car - Compartment - Bed")
+        for car_id, bed_nr in bed_tickets:
+            print(f"{car_id} - {(bed_nr + 1) // 2} - {bed_nr}")
 
 if __name__ == "__main__": main()
