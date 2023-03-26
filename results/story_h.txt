@@ -1,0 +1,8 @@
+Customer id: 1
+Today's date (YYYY-MM-DD): 2023-03-26
+2023-04-04:
+23:05 from Trondheim to Mo i Rana
+Car - Row - Seat
+1 - 2 - 4
+Car - Bed
+2 - 6

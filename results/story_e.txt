@@ -1,0 +1,4 @@
+name: Ole
+email: oarorvik@stud.ntnu.no
+mobileNr: 45692401
+Added: (1, 'Ole', 'oarorvik@stud.ntnu.no', '45692401')

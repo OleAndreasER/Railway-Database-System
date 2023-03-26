@@ -1,0 +1,5 @@
+Name of station: Trondheim
+Day of the week: monday
+23:05:00 on Nordlandsbanen
+14:13:00 on Nordlandsbanen
+07:49:00 on Nordlandsbanen

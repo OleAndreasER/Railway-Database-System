@@ -1,0 +1,9 @@
+Start station: Trondheim
+End station: Mo i Rana
+Time (HH:MM): 18:00
+Date (YYYY-MM-DD): 2023-04-04
+Tuesday:
+  Trondheim (23:05) - Mo i Rana (05:55)
+Wednesday:
+  Trondheim (07:49) - Mo i Rana (14:31)
+  Trondheim (23:05) - Mo i Rana (05:55)
